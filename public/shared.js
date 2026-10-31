@@ -43,14 +43,32 @@ export async function api(url, opts = {}) {
   return body;
 }
 export function stream(role, onState, onStatus = () => {}) {
+  const query = `/api/arena/state?role=${encodeURIComponent(role)}&limit=${role === 'judge' ? 1 : 12}`;
+  let polling = false;
+  let timer;
+  async function poll() {
+    try {
+      const response = await fetch(query, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`State HTTP ${response.status}`);
+      onState(await response.json());
+      onStatus('live');
+    } catch {
+      onStatus('reconnecting');
+    } finally {
+      if (polling) timer = setTimeout(poll, 2000);
+    }
+  }
   const events = new EventSource(`/api/arena/events?role=${encodeURIComponent(role)}`);
   events.onopen = () => onStatus('live');
-  events.onerror = () => onStatus('reconnecting');
+  events.onerror = () => {
+    events.close();
+    if (!polling) { polling = true; poll(); }
+  };
   events.addEventListener('state', event => {
     try { onState(JSON.parse(event.data)); }
     catch (error) { console.error('Invalid arena update', error); }
   });
-  return events;
+  return { close() { polling = false; clearTimeout(timer); events.close(); } };
 }
 export function connectionStatus(state) {
   const indicator = $('#connectionState');

@@ -22,6 +22,12 @@ Open these local pages:
 
 The server prints a **Blue admin token** at startup. Paste it into Blue for policy changes and local benchmark runs. The token is for this demo session; it is not packaged.
 
+## Hosted demo
+
+The Vercel deployment serves `public/` and runs `api/index.mjs` as a Node Function. A dedicated Neon Postgres row stores the shared arena, one-use challenges, permit and budget ledger, scores, and audit chain. Writes use a version check so two simultaneous requests cannot both consume one challenge. The browser uses state polling when a server-sent stream is unavailable.
+
+Set `DATABASE_URL`, `SENTINEL_AUTHORITY_PRIVATE_KEY_B64`, and `SENTINEL_ADMIN_TOKEN` as Vercel project environment variables. Never commit their values. The Vercel admin token is separate from the token printed by `npm start`. This remains a dry-run simulation with no blockchain broadcast.
+
 For a guided presentation, use [DEMO_RUNBOOK.md](DEMO_RUNBOOK.md). The text for a hackathon entry is in [SUBMISSION_FORM.md](SUBMISSION_FORM.md).
 
 The arena also has an **explicitly labeled vulnerable training fixture**. With Blue's admin token, enable it and submit Red's **Timeout +1 second** mutation to demonstrate one genuine referee-scored bypass in a deliberately weakened permit issuer. Restore secure mode to show the same mutation blocked. This fixture does not change the production guard or the default benchmark; see the [judge runbook](DEMO_RUNBOOK.md) for exact steps.
@@ -46,6 +52,7 @@ The packaged [verified results](VERIFIED_RESULTS.md) and JSON files in `results/
 | `src/demo/` | merchant challenge, Red/Blue arena, and referee |
 | `src/research/` | seeded fuzzing and held-out evaluation |
 | `src/app/` | HTTP routes, runtime, live updates, and audit |
+| `api/` | Vercel Function and durable Neon state transaction |
 | `src/cli/` | reproducible command-line evaluations |
 | `public/` | Red, Blue, Judge, and landing page |
 | `tests/` | security and legitimate-flow regressions |

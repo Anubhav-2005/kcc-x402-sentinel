@@ -34,11 +34,12 @@ export function decodeBase64Json(value) {
  * call this class rather than manipulate the arena, ledger, or challenge map.
  */
 export class SentinelRuntime {
-  constructor({ policy, audit, port, adminToken }) {
+  constructor({ policy, audit, port, adminToken, intentAuthority = null, serverless = false }) {
     this.audit = audit;
     this.port = port;
     this.adminToken = adminToken;
-    this.intentAuthority = new IntentAuthority();
+    this.intentAuthority = intentAuthority ?? new IntentAuthority();
+    this.serverless = serverless;
     this.arena = new RedBlueArena(policy, audit, this.intentAuthority);
     this.ledger = new GuardLedger();
     this.challenges = new ChallengeRegistry();
@@ -263,9 +264,11 @@ export class SentinelRuntime {
   async runAgentFlow() {
     const intent = createIntent();
     const intentPermit = this.intentAuthority.issue(intent, this.arena.policy);
-    const merchantUrl = `http://127.0.0.1:${this.port}/merchant/premium-data`;
-    const firstResponse = await fetch(merchantUrl);
-    const paymentRequiredHeader = firstResponse.headers.get('payment-required');
+    const merchantUrl = this.serverless ? null : `http://127.0.0.1:${this.port}/merchant/premium-data`;
+    const firstResponse = this.serverless ? this.merchantChallengeResponse() : await fetch(merchantUrl);
+    const paymentRequiredHeader = this.serverless
+      ? firstResponse.headers['PAYMENT-REQUIRED']
+      : firstResponse.headers.get('payment-required');
 
     if (firstResponse.status !== 402 || !paymentRequiredHeader) {
       throw new Error('Merchant did not return a valid x402 402 challenge');
@@ -324,11 +327,13 @@ export class SentinelRuntime {
       this.audit.append({ type: 'agent_flow', outcome: 'blocked', reasonCodes: ['APPROVAL_REJECTED'] });
       return { status: 403, result };
     }
-    const secondResponse = await fetch(merchantUrl, {
-      headers: { 'PAYMENT-SIGNATURE': encodeBase64Json(paymentPayload) }
-    });
-    const resourceBody = await secondResponse.json().catch(() => ({}));
-    const paymentResponseHeader = secondResponse.headers.get('payment-response');
+    const secondResponse = this.serverless
+      ? this.merchantChallengeResponse(encodeBase64Json(paymentPayload))
+      : await fetch(merchantUrl, { headers: { 'PAYMENT-SIGNATURE': encodeBase64Json(paymentPayload) } });
+    const resourceBody = this.serverless ? secondResponse.body : await secondResponse.json().catch(() => ({}));
+    const paymentResponseHeader = this.serverless
+      ? secondResponse.headers['PAYMENT-RESPONSE']
+      : secondResponse.headers.get('payment-response');
     const settled = secondResponse.status === 200;
     const result = {
       ok: settled,

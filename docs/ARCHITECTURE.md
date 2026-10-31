@@ -35,6 +35,7 @@ The Red/Blue arena is a separate evaluation plane. It stores the original challe
 | `src/state/` | Permit claims, nonce, budget reservations, challenge registry |
 | `src/demo/` | Merchant baseline, attack cases, referee, scorekeeping |
 | `src/research/` | Independent held-out cases and generated tests |
-| `src/app/` | Local HTTP API, server-sent updates, audit log |
+| `src/app/` | HTTP API, runtime, server-sent updates, audit log, state serialization |
+| `api/` | Vercel Node Function with Neon Postgres persistence |
 
-This package runs as a single local Node process with in-memory payment state and a local audit file created at runtime. A production service would require durable transactional state, per-user authentication, key management, and a verified wallet integration.
+Locally, one Node process holds payment state in memory and writes the audit log to a local file. On Vercel, a Neon Postgres row stores the arena, ledger, challenges, and audit chain. Each write compares the row version and retries on a conflict; the browser polls for shared updates. The Ed25519 authority key and Blue admin token live in Vercel secrets. A production payment service would additionally need per-user authentication, managed key rotation, stronger operational controls, and a verified wallet integration.

@@ -108,7 +108,10 @@ export function createApiRouter({ runtime, audit, getRealStatus, research, publi
       }
 
       case 'GET /api/arena/state':
-        sendJson(response, 200, runtime.arena.snapshot(url.searchParams.get('role') ?? 'judge'));
+        sendJson(response, 200, runtime.arena.snapshot(
+          url.searchParams.get('role') ?? 'judge',
+          Number(url.searchParams.get('limit') ?? 60)
+        ));
         return true;
 
       case 'POST /api/arena/submit': {

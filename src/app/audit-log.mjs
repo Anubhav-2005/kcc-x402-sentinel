@@ -22,7 +22,7 @@ export class AuditLog {
     this.legacyMigrated = false;
     this.loadError = null;
 
-    if (!fs.existsSync(file)) return;
+    if (!file || !fs.existsSync(file)) return;
     let saved;
     try {
       saved = JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -105,6 +105,7 @@ export class AuditLog {
   }
 
   persist() {
+    if (!this.file) return;
     fs.mkdirSync(path.dirname(this.file), { recursive: true });
     const temp = `${this.file}.${process.pid}.${Date.now()}.tmp`;
     const saved = {

@@ -1,10 +1,10 @@
 # Verified results
 
-Generated from this packaged source on **2026-10-31 23:23 UTC**.
+Generated from this packaged source on **2026-10-31 23:55 UTC**.
 
 | Check | Result |
 | --- | --- |
-| Node tests | 73 passed, 0 failed |
+| Node tests | 75 passed, 0 failed |
 | Seed 42 generated attacks | 500/500 contained |
 | Seed 42 honest controls | 500/500 allowed |
 | Held-out seed 42 | 300/300 attacks blocked; 300/300 legitimate allowed |
