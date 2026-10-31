@@ -24,9 +24,14 @@ The server prints a **Blue admin token** at startup. Paste it into Blue for poli
 
 ## Hosted demo
 
+**Website:** [kcc-x402-sentinel.vercel.app](https://kcc-x402-sentinel.vercel.app)  
+**Source:** [Anubhav-2005/kcc-x402-sentinel](https://github.com/Anubhav-2005/kcc-x402-sentinel) (private; teammates need a collaborator invitation)
+
 The Vercel deployment serves `public/` and runs `api/index.mjs` as a Node Function. A dedicated Neon Postgres row stores the shared arena, one-use challenges, permit and budget ledger, scores, and audit chain. Writes use a version check so two simultaneous requests cannot both consume one challenge. The browser uses state polling when a server-sent stream is unavailable.
 
 Set `DATABASE_URL`, `SENTINEL_AUTHORITY_PRIVATE_KEY_B64`, and `SENTINEL_ADMIN_TOKEN` as Vercel project environment variables. Never commit their values. The Vercel admin token is separate from the token printed by `npm start`. This remains a dry-run simulation with no blockchain broadcast.
+
+Teammates can follow [CONTRIBUTING.md](CONTRIBUTING.md) to make changes. The production site is public; Vercel preview deployments remain protected.
 
 For a guided presentation, use [DEMO_RUNBOOK.md](DEMO_RUNBOOK.md). The text for a hackathon entry is in [SUBMISSION_FORM.md](SUBMISSION_FORM.md).
 
