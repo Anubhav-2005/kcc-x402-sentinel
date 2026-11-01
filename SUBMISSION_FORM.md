@@ -32,8 +32,8 @@ The optional Red win is an intentionally introduced training vulnerability. It i
 
 The intended contribution to SDG 16.4 is preventing unauthorized autonomous value transfers at the buyer's authorization boundary and making attempted transfers auditable. This prototype does not identify real-world criminals, perform AML/KYC checks, or prove on-chain settlement. The optional testnet experiment from the research workspace is not part of this verified submission.
 
-## Add before submitting on a platform
+## Submission links
 
-- **Repository link:** add the repository URL you publish.
-- **Demo link:** add your current tunnel URL, if the event permits external access. The local demo works without one.
-- **Video link:** record the current Red, Blue, and Judge screens using [DEMO_RUNBOOK.md](DEMO_RUNBOOK.md). Do not use the historical concept storyboard as proof of the current UI.
+- **Repository:** https://github.com/Anubhav-2005/kcc-x402-sentinel
+- **Live demo:** https://kcc-x402-sentinel.vercel.app
+- **Video:** record the current Red, Blue, and Judge screens using [DEMO_RUNBOOK.md](DEMO_RUNBOOK.md), then add the recording URL when ready.

@@ -1,6 +1,6 @@
 # Contributing to KCC Sentinel
 
-The GitHub repository is private. Ask the owner for a collaborator invitation, accept it, and clone `https://github.com/Anubhav-2005/kcc-x402-sentinel.git`.
+The GitHub repository is public. Anyone can read or fork it. To push changes directly, ask the owner for a collaborator invitation, accept it, and clone `https://github.com/Anubhav-2005/kcc-x402-sentinel.git`.
 
 1. Run `npm ci` and `npm test` before editing.
 2. Change the UI in `public/`, the local/serverless API in `src/app/` and `api/`, and payment rules in `src/security/`.

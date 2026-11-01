@@ -25,7 +25,7 @@ The server prints a **Blue admin token** at startup. Paste it into Blue for poli
 ## Hosted demo
 
 **Website:** [kcc-x402-sentinel.vercel.app](https://kcc-x402-sentinel.vercel.app)  
-**Source:** [Anubhav-2005/kcc-x402-sentinel](https://github.com/Anubhav-2005/kcc-x402-sentinel) (private; teammates need a collaborator invitation)
+**Source:** [Anubhav-2005/kcc-x402-sentinel](https://github.com/Anubhav-2005/kcc-x402-sentinel) (public; a collaborator invitation is needed to push changes)
 
 The Vercel deployment serves `public/` and runs `api/index.mjs` as a Node Function. A dedicated Neon Postgres row stores the shared arena, one-use challenges, permit and budget ledger, scores, and audit chain. Writes use a version check so two simultaneous requests cannot both consume one challenge. The browser uses state polling when a server-sent stream is unavailable.
 
