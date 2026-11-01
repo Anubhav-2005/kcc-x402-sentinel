@@ -106,7 +106,20 @@ export function createApiRouter({ runtime, audit, getRealStatus, research, publi
       // The flow creates a fresh, signed dry-run approval on the server.
       case 'POST /api/demo/control': {
         const { status, result } = await runtime.runAgentFlow();
-        sendJson(response, status, result);
+        // Keep permits, signatures, challenge headers, and raw merchant data
+        // inside the trusted runtime. The guest UI only needs the outcome.
+        sendJson(response, status, {
+          ok: result.ok,
+          stage: result.stage,
+          http: {
+            firstStatus: result.http?.firstStatus,
+            secondStatus: result.http?.secondStatus
+          },
+          wallet: {
+            signed: result.wallet?.signed === true,
+            broadcast: result.wallet?.broadcast === true
+          }
+        });
         return true;
       }
 
