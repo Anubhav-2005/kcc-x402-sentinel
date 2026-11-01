@@ -1,9 +1,9 @@
 {
   "name": "x402-sentinel",
-  "version": "5.0.0-research",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Research-driven intent-bound x402 wallet firewall with signed permits, settlement checks and Red/Blue benchmarking",
+  "description": "Signed-intent guard and Red/Blue evaluation for x402 payments",
   "scripts": {
     "start": "node src/app/server.mjs",
     "test": "node --test",
@@ -12,7 +12,6 @@
     "heldout": "node src/cli/heldout.mjs",
     "heldout:multi": "node src/cli/heldout.mjs --multi",
     "heldout:compare": "node src/cli/compare-results.mjs",
-    "redteam": "node src/cli/redteam.mjs",
     "attack-lab": "node src/cli/redteam.mjs"
   },
   "engines": {

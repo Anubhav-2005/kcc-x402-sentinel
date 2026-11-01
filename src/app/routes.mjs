@@ -22,8 +22,8 @@ export function createApiRouter({ runtime, audit, getRealStatus, research, publi
     switch (key) {
       case 'GET /api/system':
         sendJson(response, 200, {
-          name: 'x402 Sentinel',
-          version: '5.0.0-research',
+          name: 'KCC Sentinel',
+          version: '1.0.0',
           x402Version: 2,
           network: 'eip155:84532',
           runtime: process.version,

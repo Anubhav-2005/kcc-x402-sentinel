@@ -12,6 +12,6 @@ Two suites answer different questions:
 
 The held-out report records raw counts, rates, severity, reason codes, and any failures. The seven-seed run uses fixed seeds `1, 7, 42, 99, 402, 1337, 2026`. Some boundary designs repeat across seeds, so the total is **not** 2,100 independent attack ideas. A zero-failure run is evidence for these tested inputs only.
 
-The package builder runs the tests and evaluations against the packaged copy before creating the ZIP. See [VERIFIED_RESULTS.md](../VERIFIED_RESULTS.md), [seed 42 JSON](../results/heldout-seed-42.json), and [seven-seed JSON](../results/heldout-multi.json). Run them again with the commands in [README.md](../README.md).
+The package builder runs the tests and evaluations against the packaged copy before creating the ZIP. See [measured results](RESULTS.md), [seed 42 JSON](../results/heldout-seed-42.json), and [seven-seed JSON](../results/heldout-multi.json). Run them again with the commands in [README.md](../README.md).
 
 The wallet-stage tests assert that a blocked malformed or expired payment never creates a dry-run signing payload. They do not test a real private-key signer or on-chain settlement.

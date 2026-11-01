@@ -1,43 +1,46 @@
 # KCC Sentinel
 
-**Team KCC · x402 Red/Blue · SDG 16.4**
+**Team KCC · x402 Red/Blue challenge**
 
-Sentinel is a buyer-side guard for an AI agent's x402 payments. The merchant supplies a `PAYMENT-REQUIRED` demand; a separate authority supplies a signed, short-lived spending permit. Sentinel compares the two before creating a wallet authorization. The included Red/Blue arena lets a judge mutate the demand and see whether the guard blocks attacks while allowing valid purchases.
+A merchant's HTTP 402 response says what it wants to be paid. It does not say what the buyer authorized. Sentinel checks the merchant's payment terms against a short-lived, signed buyer permit before the wallet authorization stage.
 
-## Run in two minutes
+[Live demo](https://kcc-x402-sentinel.vercel.app) · [Red console](https://kcc-x402-sentinel.vercel.app/red) · [Blue console](https://kcc-x402-sentinel.vercel.app/blue) · [Judge view](https://kcc-x402-sentinel.vercel.app/judge)
 
-Requires **Node.js 20 or newer**. The default demo has no third-party runtime dependencies and uses no real funds.
+## What to show
+
+1. In **Blue**, run the legitimate x402 control. The matching payment passes and the paid retry returns HTTP 200.
+2. In **Red**, choose **Timeout +1 second**. The original offer allows 60 seconds; Red submits 61. In secure mode the guard blocks it with `INTENT_TIMEOUT` before the simulated signer.
+3. In **Judge**, compare the server-held original, Red's submission, the signed permit, and the guard decision. The referee labels the expected outcome from the original offer, independently of the guard's answer.
+
+The arena also includes a deliberately vulnerable permit issuer for a controlled Red win. Blue must enable it explicitly. The same 61-second attack then passes because the issuer signs Red's changed timeout. Restoring secure mode blocks it again. This is a fault-injection demonstration, not a bypass of the default guard. See [the demo steps](docs/DEMO.md).
+
+## Run locally
+
+Requires Node.js 20 or newer.
 
 ```bash
+npm ci
 npm start
 ```
 
-Open these local pages:
+Open `http://127.0.0.1:4173`. The local server prints a Blue admin token for policy changes and the training fixture. Do not commit or share the token. The hosted deployment has its own admin token in Vercel environment variables.
 
-| Page | Address | Purpose |
-| --- | --- | --- |
-| Red | `http://127.0.0.1:4173/red` | Choose or write a payment mutation |
-| Blue | `http://127.0.0.1:4173/blue` | Set wallet policy and run a valid control |
-| Judge | `http://127.0.0.1:4173/judge` | View the independent verdict and execution trace |
+## Design
 
-The server prints a **Blue admin token** at startup. Paste it into Blue for policy changes and local benchmark runs. The token is for this demo session; it is not packaged.
+| Component | Job |
+| --- | --- |
+| `src/core` | Parse and validate x402 requirements; canonicalize resource URLs |
+| `src/security` | Verify signed intent, policy, recipient, and settlement correspondence |
+| `src/state` | Track one-use permits, challenges, nonces, and pending budget |
+| `src/demo` | Run the merchant challenge, Red mutations, and independent referee |
+| `src/research` | Generate seeded and held-out evaluation cases |
+| `src/app` and `api` | Serve local and Vercel APIs; persist shared state on Neon |
+| `public` | Red, Blue, Judge, and landing views |
+| `tests` | Guard, state, referee, and legitimate-flow regressions |
 
-## Hosted demo
+The merchant cannot issue its own buyer permit. A permit binds the resource, recipient, network, asset, amount, timeout, and use count. Permission and budget are reserved when an approval is created, before the simulated wallet stage. [Architecture](docs/ARCHITECTURE.md) has the trust boundaries and deployment details.
 
-**Website:** [kcc-x402-sentinel.vercel.app](https://kcc-x402-sentinel.vercel.app)  
-**Source:** [Anubhav-2005/kcc-x402-sentinel](https://github.com/Anubhav-2005/kcc-x402-sentinel) (public; a collaborator invitation is needed to push changes)
-
-The Vercel deployment serves `public/` and runs `api/index.mjs` as a Node Function. A dedicated Neon Postgres row stores the shared arena, one-use challenges, permit and budget ledger, scores, and audit chain. Writes use a version check so two simultaneous requests cannot both consume one challenge. The browser uses state polling when a server-sent stream is unavailable.
-
-Set `DATABASE_URL`, `SENTINEL_AUTHORITY_PRIVATE_KEY_B64`, and `SENTINEL_ADMIN_TOKEN` as Vercel project environment variables. Never commit their values. The Vercel admin token is separate from the token printed by `npm start`. This remains a dry-run simulation with no blockchain broadcast.
-
-Teammates can follow [CONTRIBUTING.md](CONTRIBUTING.md) to make changes. The production site is public; Vercel preview deployments remain protected.
-
-For a guided presentation, use [DEMO_RUNBOOK.md](DEMO_RUNBOOK.md). The text for a hackathon entry is in [SUBMISSION_FORM.md](SUBMISSION_FORM.md).
-
-The arena also has an **explicitly labeled vulnerable training fixture**. With Blue's admin token, enable it and submit Red's **Timeout +1 second** mutation to demonstrate one genuine referee-scored bypass in a deliberately weakened permit issuer. Restore secure mode to show the same mutation blocked. This fixture does not change the production guard or the default benchmark; see the [judge runbook](DEMO_RUNBOOK.md) for exact steps.
-
-## Reproduce the evidence
+## Reproduce the checks
 
 ```bash
 npm test
@@ -45,21 +48,10 @@ npm run heldout -- --seed 42 --attacks 300 --legitimate 300
 npm run heldout:multi -- --attacks 300 --legitimate 300
 ```
 
-The packaged [verified results](VERIFIED_RESULTS.md) and JSON files in `results/` are generated from this exact copy. Counts are controlled observations, not a proof that every attack is blocked. See [evaluation method](docs/EVALUATION.md) and [limits](docs/LIMITS.md).
+[Measured results](docs/RESULTS.md) and the raw reports in `results/` come from this packaged source. The test corpus is synthetic; passing it is not a claim of universal security. [Evaluation method](docs/EVALUATION.md) explains the labels and counts.
 
-## Where the code lives
+## Scope
 
-| Folder | Responsibility |
-| --- | --- |
-| `src/core/` | x402 parsing and purchase intent |
-| `src/security/` | signed permit verification and payment decision |
-| `src/state/` | permit use, nonce, challenge, and budget state |
-| `src/demo/` | merchant challenge, Red/Blue arena, and referee |
-| `src/research/` | seeded fuzzing and held-out evaluation |
-| `src/app/` | HTTP routes, runtime, live updates, and audit |
-| `api/` | Vercel Function and durable Neon state transaction |
-| `src/cli/` | reproducible command-line evaluations |
-| `public/` | Red, Blue, Judge, and landing page |
-| `tests/` | security and legitimate-flow regressions |
+This is a dry-run security prototype. It constructs x402-shaped requirements and a payment authorization payload, but does not use a real wallet key, broadcast a transaction, or verify on-chain settlement. The recipient relationship graph uses synthetic demo data. See [scope and limits](docs/LIMITS.md) and [references](docs/REFERENCES.md).
 
-Read [the architecture](docs/ARCHITECTURE.md) for the trust boundary and [the references](docs/REFERENCES.md) for the protocol and research context. The default build is a **dry-run simulation**: it constructs x402-shaped requirements and an authorization payload but does not broadcast a blockchain transaction.
+Teammates can use [CONTRIBUTING.md](CONTRIBUTING.md) to develop and submit changes. `main` deploys to the public Vercel site; the repo never contains database credentials or signing keys.

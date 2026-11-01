@@ -124,7 +124,7 @@ const server = http.createServer(async (request, response) => {
 });
 
 server.listen(port, process.env.HOST ?? '127.0.0.1', () => {
-  console.log('\n  x402 Sentinel Research V5');
+  console.log('\n  KCC Sentinel');
   console.log(`  Local   http://127.0.0.1:${port}`);
   console.log(`  Blue admin token   ${adminToken}`);
 
@@ -136,6 +136,5 @@ server.listen(port, process.env.HOST ?? '127.0.0.1', () => {
     }
   }
 
-  console.log('  Mode    safe demo by default; no real funds are broadcast');
-  console.log('  Scope   simulated authorization and settlement; no funds broadcast\n');
+  console.log('  Mode    dry-run; no funds are broadcast\n');
 });

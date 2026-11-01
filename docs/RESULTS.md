@@ -1,6 +1,6 @@
 # Verified results
 
-Generated from this packaged source on **2026-11-01 00:16 UTC**.
+Generated from this packaged source on **2026-11-01 00:21 UTC**.
 
 | Check | Result |
 | --- | --- |
@@ -11,4 +11,4 @@ Generated from this packaged source on **2026-11-01 00:16 UTC**.
 | Seven fixed seeds | 2100 attacks; 2100 legitimate controls; 0 observed bypasses; 0 false positives |
 | Security hardening probes | 5 passed |
 
-See `results/heldout-seed-42.json` and `results/heldout-multi.json` for the raw reports. These runs use synthetic inputs and repeated boundary designs. Zero observed bypasses is **not** a universal security guarantee or proof of on-chain settlement.
+The raw reports are [seed 42](../results/heldout-seed-42.json) and [seven seeds](../results/heldout-multi.json). These runs use synthetic inputs and repeated boundary designs. Zero observed bypasses is not a universal security guarantee or proof of on-chain settlement.
