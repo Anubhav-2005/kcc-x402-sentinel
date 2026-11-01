@@ -1,17 +1,78 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Blue Console · Sentinel</title><link rel="stylesheet" href="/app.css"><link rel="stylesheet" href="/console.css"></head>
-<body><nav class="nav"><div class="navin"><a class="brand" href="/"><span class="mark"></span><span>KCC</span><em>/</em><span class="brandProduct">Sentinel</span></a><div class="navlinks"><a href="/red">Red</a><a href="/judge">Judge</a></div><span class="pill">Blue Team <span id="connectionState" class="connectionState" data-state="connecting">Connecting</span></span></div></nav>
-<main class="shell">
-  <div class="topbar"><div><div class="researchEyebrow blueText">EXECUTION BOUNDARY</div><h1>Define the authority.</h1><p class="subtle">Blue sets the payment contract. Sentinel enforces it before any wallet authorization is created.</p></div><div class="pill">Blue <b id="blueScore">0</b> · Red <b id="redScore">0</b></div></div>
-  <div class="dashboard"><section class="panel">
-    <div class="panelhead"><div><h2>Wallet authority policy</h2><p class="subtle">Load the merchant baseline, then tighten values deliberately.</p></div><button id="baseline" class="btn secondary">Load baseline</button></div>
-    <div class="field full"><label>Admin token printed at local server startup</label><input id="adminToken" type="password" autocomplete="off" placeholder="Required for Blue controls"></div>
-    <p class="formnote">Amounts are USDC. Decimals up to 6 places are accepted and safely converted to atomic units before Sentinel receives them.</p>
-    <div class="fields"><div class="field"><label>Max per payment (USDC)</label><input id="maxPayment" inputmode="decimal" placeholder="0.05"></div><div class="field"><label>Daily budget (USDC)</label><input id="dailyBudget" inputmode="decimal" placeholder="1.00"></div><div class="field"><label>Merchant max (USDC)</label><input id="merchantMax" inputmode="decimal" placeholder="0.05"></div><div class="field"><label>Max timeout seconds</label><input id="timeout" inputmode="numeric" placeholder="60"></div><div class="field full"><label>Expected recipient</label><input id="payTo" placeholder="0x…"></div><div class="field full"><label>Allowed network</label><input id="network" placeholder="eip155:84532"></div><div class="field"><label>Payment flow</label><input id="paymentFlow" placeholder="authorization"></div><div class="field"><label>Transfer method</label><input id="transferMethod" placeholder="eip3009"></div></div>
-    <div class="actions"><button id="save" class="btn blue">Apply policy</button><button id="legit" class="btn secondary">Run local x402 control</button></div>
-    <div class="trainingControl"><div><b>Training fixture · permit issuer</b><p class="subtle">Secure mode binds the original 60s timeout. Vulnerable mode deliberately trusts Red's changed timeout in this dry-run arena only.</p></div><div class="trainingActions"><span id="trainingModeLabel" class="modeBadge">Secure</span><button id="trainingModeButton" class="btn secondary" type="button">Enable vulnerable mode</button></div></div>
-  </section>
-  <aside class="panel darkpanel"><h2>Signed intent authority</h2><div id="authority" class="decision"><div class="big">Ed25519</div><p>Connecting to the local signing authority…</p></div><h2 style="margin-top:22px">Security telemetry</h2><div class="minirow"><div class="metric"><span>Attack block</span><b id="abr">100%</b></div><div class="metric"><span>Legit pass</span><b id="lpr">100%</b></div><div class="metric"><span>Protected</span><b id="protected">$0</b></div></div><div class="minirow" style="margin-top:10px"><div class="metric"><span>Bypasses</span><b id="bypasses">0</b></div><div class="metric"><span>False positives</span><b id="fp">0</b></div><div class="metric"><span>Correct</span><b id="correct">0</b></div></div></aside></div>
-  <div class="dashboard" style="margin-top:18px"><section class="panel"><div class="panelhead"><h2>Five-stage control trace</h2></div><div id="trace" class="stageTrace"><div class="subtle">Run the legitimate control.</div></div></section><section class="panel"><div class="panelhead"><h2>Latest round</h2></div><div id="latest" class="subtle">Waiting for Red Team…</div></section></div>
-  <section class="panel" style="margin-top:18px"><div class="panelhead"><h2>Recent decisions</h2></div><div id="feed" class="feed"></div></section>
-</main><div id="toast" class="toast"></div><script type="module" src="/blue.js"></script></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f2ec">
+  <title>Blue console — KCC Sentinel</title>
+  <link rel="stylesheet" href="/app.css">
+  <link rel="stylesheet" href="/console.css">
+</head>
+<body>
+  <nav class="nav" aria-label="Main navigation">
+    <div class="navin">
+      <a class="brand" href="/" aria-label="KCC Sentinel home"><span class="mark" aria-hidden="true"></span><span>KCC</span><em>/</em><span class="brandProduct">Sentinel</span></a>
+      <div class="navlinks"><a href="/red">Red</a><a href="/blue" aria-current="page">Blue</a><a href="/judge">Judge</a></div>
+      <span class="navmeta">Blue / <span id="connectionState" class="connectionState" data-state="connecting">Connecting</span></span>
+    </div>
+  </nav>
+
+  <main class="shell">
+    <div class="topbar">
+      <div><span class="researchEyebrow">Blue / Wallet authority</span><h1>Set the spending boundary.</h1><p>Blue defines what the agent may buy. Sentinel checks the merchant’s actual demand before the simulated wallet stage opens.</p></div>
+      <div class="scoreCompact"><span>Blue <b id="blueScore">0</b></span><i aria-hidden="true"></i><span>Red <b id="redScore">0</b></span></div>
+    </div>
+
+    <div class="dashboard">
+      <section class="panel" aria-labelledby="policyHeading">
+        <div class="panelhead">
+          <div><h2 id="policyHeading">Wallet authority policy</h2><p>Load the merchant offer, then change limits deliberately.</p></div>
+          <button id="baseline" class="btn secondary" type="button">Load baseline</button>
+        </div>
+        <div class="fields">
+          <div class="field"><label for="maxPayment">Max per payment · USDC</label><input id="maxPayment" inputmode="decimal" placeholder="0.05"></div>
+          <div class="field"><label for="dailyBudget">Daily budget · USDC</label><input id="dailyBudget" inputmode="decimal" placeholder="1.00"></div>
+          <div class="field"><label for="merchantMax">Merchant max · USDC</label><input id="merchantMax" inputmode="decimal" placeholder="0.05"></div>
+          <div class="field"><label for="timeout">Max timeout · seconds</label><input id="timeout" inputmode="numeric" placeholder="120"></div>
+          <div class="field full"><label for="payTo">Expected recipient</label><input id="payTo" spellcheck="false" placeholder="0x…"></div>
+          <div class="field full"><label for="network">Allowed network</label><input id="network" spellcheck="false" placeholder="eip155:84532"></div>
+          <div class="field"><label for="paymentFlow">Payment flow</label><input id="paymentFlow" spellcheck="false" placeholder="authorization"></div>
+          <div class="field"><label for="transferMethod">Transfer method</label><input id="transferMethod" spellcheck="false" placeholder="eip3009"></div>
+          <div class="field full"><label for="adminToken">Blue admin token</label><input id="adminToken" type="password" autocomplete="off" placeholder="Required to change policy or run the control"></div>
+        </div>
+        <p class="formnote">USDC values accept up to six decimal places and are converted exactly to atomic units.</p>
+        <div class="actions"><button id="save" class="btn blue" type="button">Apply policy</button><button id="legit" class="btn secondary" type="button">Run x402 control</button></div>
+        <div class="trainingControl">
+          <div><b>Fault injection / permit issuer</b><p>A labeled training mode lets the issuer trust Red’s changed timeout. The normal guard and benchmark remain unchanged.</p></div>
+          <div class="trainingActions"><span id="trainingModeLabel" class="modeBadge">Secure</span><button id="trainingModeButton" class="btn secondary" type="button">Enable vulnerable mode</button></div>
+        </div>
+      </section>
+
+      <aside class="panel darkpanel" aria-labelledby="authorityHeading">
+        <div class="panelhead"><div><h2 id="authorityHeading">Signed intent authority</h2><p class="subtle">The owner’s permit is separate from the merchant’s demand.</p></div></div>
+        <div id="authority" class="decision"><div class="big">Ed25519</div><p>Connecting to the signing authority…</p></div>
+        <div class="asideDivider"></div>
+        <h3>Security telemetry</h3>
+        <div class="minirow">
+          <div class="metric"><span>Attack block</span><b id="abr">—</b></div>
+          <div class="metric"><span>Valid pass</span><b id="lpr">—</b></div>
+          <div class="metric"><span>Protected</span><b id="protected">$0</b></div>
+        </div>
+        <div class="minirow">
+          <div class="metric"><span>Bypasses</span><b id="bypasses">0</b></div>
+          <div class="metric"><span>False positives</span><b id="fp">0</b></div>
+          <div class="metric"><span>Correct</span><b id="correct">0</b></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="dashboard" style="margin-top:18px">
+      <section class="panel"><div class="panelhead"><h2>Five-stage control trace</h2></div><div id="trace" class="stageTrace" aria-live="polite"><div class="subtle">Run the legitimate control to see the 402 → 200 path.</div></div></section>
+      <section class="panel"><div class="panelhead"><h2>Latest round</h2></div><div id="latest" class="subtle" aria-live="polite">Waiting for Red Team…</div></section>
+    </div>
+    <section class="panel" style="margin-top:18px"><div class="panelhead"><h2>Recent decisions</h2><a class="btn secondary" href="/judge">Open judge view ↗</a></div><div id="feed" class="feed"></div></section>
+  </main>
+  <div id="toast" class="toast" role="status"></div>
+  <script type="module" src="/blue.js"></script>
+</body>
+</html>

@@ -100,14 +100,16 @@ export function kv(object, keys) {
   ).join('');
 }
 
-export function setupReveals() {
-  const observer = new IntersectionObserver(entries => {
-    for (const entry of entries) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('on');
-        observer.unobserve(entry.target);
-      }
+export function roundEvidence(item) {
+  const original = item.originalPaymentRequired?.accepts?.[0]?.maxTimeoutSeconds;
+  const received = item.paymentRequired?.accepts?.[0]?.maxTimeoutSeconds;
+  if (Number.isInteger(original) && Number.isInteger(received) && received > original) {
+    if (item.outcomeType === 'bypass' && item.trainingMode === 'merchant-timeout') {
+      return `Original ${original}s → received ${received}s. The deliberately vulnerable issuer signed a ${item.intentPermit?.maxTimeoutSeconds}s permit, so the guard allowed an altered offer.`;
     }
-  }, { threshold: .12 });
-  for (const element of $$('.reveal')) observer.observe(element);
+    if (item.guard?.reasonCodes?.includes('INTENT_TIMEOUT')) {
+      return `Original ${original}s → received ${received}s. The signed permit kept the ${original}s ceiling, so Sentinel blocked the change before the simulated wallet stage.`;
+    }
+  }
+  return item.groundTruth?.reason ?? item.guard?.reason ?? 'No decision evidence available.';
 }

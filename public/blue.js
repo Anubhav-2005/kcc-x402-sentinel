@@ -137,7 +137,8 @@ stream('blue', state => {
   field('trainingModeLabel').classList.toggle('vulnerable', vulnerable);
   field('trainingModeButton').textContent = vulnerable ? 'Restore secure mode' : 'Enable vulnerable mode';
   field('blueScore').textContent = state.scores.blue; field('redScore').textContent = state.scores.red;
-  field('abr').textContent = `${state.metrics.attackBlockRate}%`; field('lpr').textContent = `${state.metrics.legitPassRate}%`;
+  field('abr').textContent = state.metrics.attackTotal ? `${state.metrics.attackBlockRate}%` : '—';
+  field('lpr').textContent = state.metrics.legitTotal ? `${state.metrics.legitPassRate}%` : '—';
   field('protected').textContent = money(state.metrics.protectedAtomic); field('bypasses').textContent = state.metrics.guardBypasses;
   field('fp').textContent = state.metrics.falsePositives ?? 0; field('correct').textContent = state.metrics.guardCorrect;
   if (!policyEditorDirty && JSON.stringify(state.policy) !== lastPolicyKey) loadPolicy(state.policy);
@@ -145,10 +146,10 @@ stream('blue', state => {
   if (latest?.id === lastRenderedRoundId) return;
   lastRenderedRoundId = latest?.id ?? null;
   field('latest').innerHTML = latest
-    ? `<div class="diffbox"><div class="kv"><span>Round</span><span>${latest.round}</span></div><div class="kv"><span>Verdict</span><span>${escapeHtml(outcome(latest))}</span></div><div class="kv"><span>Property tags</span><span>${escapeHtml((latest.guard.propertyTags ?? []).map(tag => tag.id).join(', ') || '—')}</span></div></div>`
+    ? `<div class="diffbox"><div class="kv"><span>Round</span><span>${latest.round}</span></div><div class="kv"><span>Verdict</span><span>${escapeHtml(outcome(latest))}</span></div><div class="kv"><span>Mode used</span><span>${latest.trainingMode === 'merchant-timeout' ? 'Deliberately vulnerable fixture' : 'Secure permit binding'}</span></div><div class="kv"><span>Signer</span><span>${latest.wallet.signed ? 'Dry-run opened' : 'Stayed closed'}</span></div></div>`
     : 'Waiting for Red Team…';
   field('feed').innerHTML = [...state.requests].reverse().map(item => `<div class="event"><div class="eventtop"><strong>Round ${item.round}</strong><span class="tag ${item.guard.correct ? 'allow' : 'block'}">${outcome(item)}</span></div><p>${escapeHtml((item.guard.reasonCodes ?? []).join(', ') || 'Policy matched')}</p></div>`).join('') || '<div class="subtle">No decisions yet.</div>';
 }, connectionStatus);
 api('/api/system').then(system => {
-  field('authority').innerHTML = `<div class="big">Ed25519</div><p>Intent authority <b>${escapeHtml(short(system.authority.keyId, 8))}</b>. Paste the admin token printed by the local server to make Blue changes.</p>`;
+  field('authority').innerHTML = `<div class="big">Ed25519</div><p>Authority key <b>${escapeHtml(short(system.authority.keyId, 8))}</b>. Blue controls require the admin token for this deployment.</p>`;
 }).catch(error => toast(error.message));

@@ -1,4 +1,4 @@
-import { $, api, stream, short, money, toast, escapeHtml, connectionStatus, busy } from './shared.js';
+import { $, api, stream, short, money, toast, escapeHtml, connectionStatus, busy, roundEvidence } from './shared.js';
 import { atomicToUsdc, usdcToAtomic } from './usdc.js';
 
 const LOOP_PAYEE = '0x2222222222222222222222222222222222222222';
@@ -185,10 +185,11 @@ function applyPreset(id) {
 }
 
 function showVerdict(item) {
-  const tags = (item.guard.propertyTags ?? []).map(tag => `${tag.id} ${tag.name}`).join(' · ') || 'No failed property';
   const closure = item.guard.closure;
+  const mode = item.trainingMode === 'merchant-timeout' ? 'Deliberately vulnerable training fixture' : 'Secure permit binding';
+  const reasonCodes = item.guard.reasonCodes ?? [];
   field('verdict').className = `decision ${item.guard.action}`;
-  field('verdict').innerHTML = `<div class="big">${outcome(item)}</div><p><b>Referee: ${escapeHtml(item.classification.toUpperCase())}</b> · Expected ${escapeHtml(item.groundTruth.expected.toUpperCase())} · Sentinel ${escapeHtml(item.guard.action.toUpperCase())}</p><p>${escapeHtml(item.groundTruth?.reason ?? item.guard.reason)}</p><div class="checks">${(item.guard.reasonCodes ?? []).map(code => `<div class="check bad">${escapeHtml(code)}</div>`).join('') || '<div class="check ok">All policy checks matched</div>'}</div><p class="subtle">Properties: ${escapeHtml(tags)}</p>`;
+  field('verdict').innerHTML = `<div class="big">${outcome(item)}</div><p>${escapeHtml(mode)} · Round ${item.round}</p><p>${escapeHtml(roundEvidence(item))}</p><div class="checks">${reasonCodes.map(code => `<div class="check bad">${escapeHtml(code)}</div>`).join('') || '<div class="check ok">No guard check failed</div>'}</div><p class="subtle">Referee expected ${escapeHtml(item.groundTruth.expected.toUpperCase())} · Sentinel ${escapeHtml(item.guard.action.toUpperCase())} · Simulated signer ${item.wallet.signed ? 'opened' : 'stayed closed'}</p>`;
   field('closure').textContent = closure?.source === 'seeded-demo-graph'
     ? `${closure.verdict.toUpperCase()}: ${closure.reason} · ${(closure.path ?? []).map(address => short(address, 6)).join(' → ')} · synthetic graph`
     : 'No seeded closure result for this decision.';
@@ -256,11 +257,12 @@ stream('red', state => {
     : 'Training fixture: secure permit binding is active. Timeout +1 second should be blocked.';
   field('trainingModeNotice').classList.toggle('vulnerable', vulnerable);
   field('round').textContent = state.round; field('redScore').textContent = state.scores.red; field('blueScore').textContent = state.scores.blue;
-  field('abr').textContent = `${state.metrics.attackBlockRate}%`; field('lpr').textContent = `${state.metrics.legitPassRate}%`;
+  field('abr').textContent = state.metrics.attackTotal ? `${state.metrics.attackBlockRate}%` : '—';
+  field('lpr').textContent = state.metrics.legitTotal ? `${state.metrics.legitPassRate}%` : '—';
   const latest = state.requests.at(-1);
   if (latest?.id === lastRenderedRoundId) return;
   lastRenderedRoundId = latest?.id ?? null;
-  field('feed').innerHTML = [...state.requests].reverse().map(item => `<div class="event"><div class="eventtop"><strong>Round ${item.round} · ${escapeHtml(item.redLabel)}</strong><span class="tag ${item.guard.correct ? 'allow' : 'block'}">${outcome(item)}</span></div><p>Referee: ${escapeHtml(item.classification.toUpperCase())} · Expected ${escapeHtml(item.groundTruth.expected.toUpperCase())} · Sentinel ${escapeHtml(item.guard.action.toUpperCase())}</p><p>${escapeHtml((item.guard.reasonCodes ?? []).join(', ') || item.groundTruth.reason)}</p></div>`).join('') || '<div class="subtle">No rounds yet.</div>';
+  field('feed').innerHTML = [...state.requests].reverse().map(item => `<div class="event"><div class="eventtop"><strong>Round ${item.round} · ${escapeHtml(item.redLabel)}</strong><span class="tag ${item.guard.correct ? 'allow' : 'block'}">${outcome(item)}</span></div><p>${item.trainingMode === 'merchant-timeout' ? 'Vulnerable fixture' : 'Secure mode'} · Expected ${escapeHtml(item.groundTruth.expected.toUpperCase())} · Sentinel ${escapeHtml(item.guard.action.toUpperCase())}</p></div>`).join('') || '<div class="subtle">No rounds yet.</div>';
   if (latest) showVerdict(latest);
   else {
     field('verdict').className = 'decision';

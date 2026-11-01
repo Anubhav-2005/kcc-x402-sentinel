@@ -1,4 +1,4 @@
-import { $, api, stream, short, money, escapeHtml, connectionStatus, busy } from './shared.js';
+import { $, api, stream, short, money, escapeHtml, connectionStatus, busy, roundEvidence } from './shared.js';
 const field = id => $(`#${id}`);
 let lastRenderedRoundId = null;
 const outcome = item => item.outcomeType === 'bypass' ? 'TRUE BYPASS' : item.outcomeType === 'false-positive' ? 'FALSE POSITIVE' : item.outcomeType === 'attack-blocked' ? 'ATTACK BLOCKED' : 'LEGITIMATE PASS';
@@ -18,7 +18,8 @@ stream('judge', state => {
     : 'SECURE MODE · permit binds the server-held original timeout';
   field('trainingModeNotice').classList.toggle('vulnerable', vulnerable);
   field('blueScore').textContent = state.scores.blue; field('redScore').textContent = state.scores.red; field('round').textContent = state.round;
-  field('abr').textContent = `${state.metrics.attackBlockRate}%`; field('lpr').textContent = `${state.metrics.legitPassRate}%`;
+  field('abr').textContent = state.metrics.attackTotal ? `${state.metrics.attackBlockRate}%` : '—';
+  field('lpr').textContent = state.metrics.legitTotal ? `${state.metrics.legitPassRate}%` : '—';
   field('bypasses').textContent = state.metrics.guardBypasses; field('fp').textContent = state.metrics.falsePositives ?? 0;
   field('unauthorized').textContent = money(state.metrics.unauthorizedValueSettled);
   const item = state.requests.at(-1);
@@ -27,31 +28,30 @@ stream('judge', state => {
   if (!item) {
     field('clock').textContent = 'Waiting for first challenge';
     field('roundType').textContent = 'READY';
-    field('headline').textContent = 'Autonomous money. Measured at the execution boundary.';
+    field('headline').textContent = 'A payment is judged against the original offer.';
     for (const id of ['expected', 'actual', 'refResult']) field(id).textContent = '—';
     for (const id of ['original', 'received']) field(id).textContent = 'No round yet.';
     field('permit').textContent = 'A permit appears on the first round.';
     field('reason').textContent = 'Waiting for evidence.';
     field('trace').textContent = 'Waiting for a round…';
     field('decision').className = 'judgeDecision';
-    field('decision').innerHTML = '<div><div class="word">READY</div><div class="subtle">No wallet authorization has been created.</div></div><div class="pill">Independent referee armed</div>';
+    field('decision').innerHTML = '<div><div class="word">READY</div><div class="subtle">No arena round has been evaluated.</div></div><div class="pill">Independent referee armed</div>';
     return;
   }
   const control = item.classification === 'legitimate';
   field('clock').textContent = new Date(item.createdAt).toLocaleTimeString();
   field('roundType').textContent = `${control ? 'CONTROL ROUND · LEGITIMATE' : 'ATTACK ROUND · ADVERSARIAL'}${item.trainingMode === 'merchant-timeout' ? ' · VULNERABLE FIXTURE' : ''}`;
-  field('headline').textContent = control ? 'Can Sentinel preserve a valid payment?' : 'Can Red make unauthorized value move?';
+  field('headline').textContent = control ? 'Did the valid payment pass?' : 'Did the changed terms reach the signer?';
   field('expected').textContent = control ? 'ALLOW' : 'BLOCK'; field('actual').textContent = item.guard.action.toUpperCase();
   field('refResult').textContent = item.guard.correct ? 'CORRECT' : outcome(item);
   field('original').innerHTML = rows(item.originalPaymentRequired); field('received').innerHTML = rows(item.paymentRequired);
   const permit = item.intentPermit;
   field('permit').innerHTML = permit ? `<div class="kv"><span>Permit</span><span>${escapeHtml(short(permit.permitId, 10))}</span></div><div class="kv"><span>Max amount</span><span>${escapeHtml(money(permit.maxAmount))}</span></div><div class="kv"><span>Timeout ceiling</span><span>${escapeHtml(permit.maxTimeoutSeconds)}s</span></div><div class="kv"><span>Recipient</span><span>${escapeHtml(short(permit.payTo?.[0], 10))}</span></div>` : 'No permit available.';
-  const tags = (item.guard.propertyTags ?? []).map(tag => `${tag.id} ${tag.name}`).join(' · ') || 'All applicable properties held';
   const closure = item.guard.closure;
-  field('reason').innerHTML = `<div class="checks">${(item.guard.reasonCodes ?? []).map(code => `<div class="check bad">${escapeHtml(code)}</div>`).join('') || '<div class="check ok">Policy matched</div>'}</div><p>Properties: ${escapeHtml(tags)}</p><p>Closure: ${escapeHtml(closure?.source === 'seeded-demo-graph' ? `${closure.verdict} · ${closure.reason} · synthetic graph` : 'not applicable')}</p>`;
+  field('reason').innerHTML = `<p>${escapeHtml(roundEvidence(item))}</p><div class="checks">${(item.guard.reasonCodes ?? []).map(code => `<div class="check bad">${escapeHtml(code)}</div>`).join('') || '<div class="check ok">No guard check failed</div>'}</div><p>Recipient graph: ${escapeHtml(closure?.source === 'seeded-demo-graph' ? `${closure.verdict} · synthetic demo graph` : 'not applicable')}</p>`;
   field('trace').innerHTML = trace(item);
   field('decision').className = `judgeDecision ${item.guard.correct ? 'allow' : 'block'}`;
-  field('decision').innerHTML = `<div><div class="word">${outcome(item)}</div><div class="subtle">${escapeHtml(item.guard.reason)}</div></div><div class="pill">Expected ${control ? 'ALLOW' : 'BLOCK'} · Actual ${item.guard.action.toUpperCase()}</div>`;
+  field('decision').innerHTML = `<div><div class="word">${outcome(item)}</div><div class="subtle">${item.trainingMode === 'merchant-timeout' ? 'This round used the deliberately vulnerable training fixture.' : 'This round used secure permit binding.'}</div></div><div class="pill">Expected ${control ? 'ALLOW' : 'BLOCK'} · Actual ${item.guard.action.toUpperCase()}</div>`;
 }, connectionStatus);
 
 let reports = { known: null, heldout: null, multi: null };
