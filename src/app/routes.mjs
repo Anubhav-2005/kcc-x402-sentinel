@@ -101,6 +101,15 @@ export function createApiRouter({ runtime, audit, getRealStatus, research, publi
         return true;
       }
 
+      // A guest can exercise the normal 402 -> 200 path without receiving
+      // authority to edit a wallet policy, issue permits, or enable fixtures.
+      // The flow creates a fresh, signed dry-run approval on the server.
+      case 'POST /api/demo/control': {
+        const { status, result } = await runtime.runAgentFlow();
+        sendJson(response, status, result);
+        return true;
+      }
+
       case 'POST /api/intent/issue': {
         if (!requiresAdmin(runtime, request, response)) return true;
         sendJson(response, 201, runtime.issueIntent(await readJson(request)));

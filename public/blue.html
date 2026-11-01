@@ -38,12 +38,16 @@
           <div class="field full"><label for="network">Allowed network</label><input id="network" spellcheck="false" placeholder="eip155:84532"></div>
           <div class="field"><label for="paymentFlow">Payment flow</label><input id="paymentFlow" spellcheck="false" placeholder="authorization"></div>
           <div class="field"><label for="transferMethod">Transfer method</label><input id="transferMethod" spellcheck="false" placeholder="eip3009"></div>
-          <div class="field full"><label for="adminToken">Blue admin token</label><input id="adminToken" type="password" autocomplete="off" placeholder="Required to change policy or run the control"></div>
+          <div class="field full"><label for="adminToken">Blue admin token</label><input id="adminToken" type="password" autocomplete="off" placeholder="Required only for policy changes and training mode"></div>
         </div>
         <p class="formnote">USDC values accept up to six decimal places and are converted exactly to atomic units.</p>
-        <div class="actions"><button id="save" class="btn blue" type="button">Apply policy</button><button id="legit" class="btn secondary" type="button">Run x402 control</button></div>
+        <div class="guestControl">
+          <div><span>Public demo</span><b>Run the normal x402 control</b><p>No token is needed. This uses a fresh signed dry-run approval and cannot change this wallet policy.</p></div>
+          <button id="publicControl" class="btn blue" type="button">Try the control</button>
+        </div>
+        <div class="actions"><button id="save" class="btn blue" type="button">Apply policy</button><button id="legit" class="btn secondary" type="button">Run with this policy</button></div>
         <div class="trainingControl">
-          <div><b>Fault injection / permit issuer</b><p>A labeled training mode lets the issuer trust Red’s changed timeout. The normal guard and benchmark remain unchanged.</p></div>
+          <div><b>Restricted training fixture</b><p>An admin-only, labeled fault injection lets the issuer trust Red’s changed timeout. The normal guard and benchmark remain unchanged.</p></div>
           <div class="trainingActions"><span id="trainingModeLabel" class="modeBadge">Secure</span><button id="trainingModeButton" class="btn secondary" type="button">Enable vulnerable mode</button></div>
         </div>
       </section>

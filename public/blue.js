@@ -112,11 +112,12 @@ field('trainingModeButton').onclick = async () => {
   } catch (error) { toast(error.message); }
   finally { busy(button, false); }
 };
-field('legit').onclick = async () => {
-  saveToken(); const button = field('legit'); busy(button, true);
+async function runControl({ endpoint, button, authenticated = false }) {
+  if (authenticated) saveToken();
+  busy(button, true);
   field('trace').innerHTML = '<div class="subtle">Checking the merchant challenge…</div>';
   try {
-    const result = await api('/api/agent/run', { method: 'POST', headers: headers(), body: '{}' });
+    const result = await api(endpoint, { method: 'POST', headers: authenticated ? headers() : {}, body: '{}' });
     field('trace').innerHTML = [['402 challenge', 'observed'], ['Sentinel', 'allow'], ['Wallet', 'signed'], ['Settlement', 'settled'], ['Resource', 'compliant']]
       .map(([label, state], index) => `<div class="stage ${state}"><span>${index + 1}</span><div><b>${label}</b><small>Dry-run control flow</small></div></div>`).join('');
     toast(result.ok ? 'Legitimate 402 → 200 control completed' : 'Control was blocked');
@@ -127,7 +128,14 @@ field('legit').onclick = async () => {
       : `<div class="stage block"><span>1</span><div><b>Sentinel blocked the control</b><small>${escapeHtml(error.message)} · Wallet not called</small></div></div>`;
     toast(error.message);
   } finally { busy(button, false); }
-};
+}
+
+field('publicControl').onclick = () => runControl({
+  endpoint: '/api/demo/control', button: field('publicControl')
+});
+field('legit').onclick = () => runControl({
+  endpoint: '/api/agent/run', button: field('legit'), authenticated: true
+});
 
 function outcome(item) { return item.outcomeType === 'bypass' ? 'TRUE BYPASS' : item.outcomeType === 'false-positive' ? 'FALSE POSITIVE' : item.outcomeType === 'attack-blocked' ? 'ATTACK BLOCKED' : 'LEGITIMATE PASS'; }
 stream('blue', state => {
