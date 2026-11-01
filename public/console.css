@@ -338,3 +338,50 @@
   .scoreline { width: 100%; }
   .teamscore { flex: 1; min-width: 0; }
 }
+
+/* Local preview: Team KCC console skin. */
+.kcc-console { background: #0b0d0b; color: #eef0eb; }
+.kcc-console .nav { background: #090a09; border-bottom-color: #252a24; }
+.kcc-console .brand, .kcc-console .brandProduct { color: #f4f5ef; }
+.kcc-console .brand em { color: #515a50; }.kcc-console .mark { background: #a7f31b; color: #10120e; border-radius: 5px; }
+.kcc-console .navlinks a { color: #9fa69e; }.kcc-console .navlinks a:hover, .kcc-console .navlinks a[aria-current="page"] { background: #1e251e; color: #a7f31b; }
+.kcc-console .navmeta { color: #8b968a; }.kcc-console .navmeta::before { background: #a7f31b; }
+.kcc-console .shell, .kcc-console .judgewrap { width: min(1320px, 100%); padding-top: 44px; }
+.kcc-console .researchEyebrow { color: #a7f31b; }.kcc-console .topbar h1, .kcc-console .judgeTop h1 { color: #f5f6f0; font-size: clamp(32px, 3.1vw, 45px); }
+.kcc-console .topbar p, .kcc-console .judgeTop p, .kcc-console .subtle { color: #9fa99f; }
+.kcc-console .scoreCompact, .kcc-console .teamscore { border-color: #323a31; border-radius: 0; background: #111411; }
+.kcc-console .scoreCompact span, .kcc-console .teamscore small { color: #a4ada3; }.kcc-console .scoreCompact b, .kcc-console .teamscore b { color: #a7f31b; }
+.kcc-console .scoreCompact i { border-color: #3a4239; }.kcc-console .teamscore.redscore b { color: #ff7663; }
+.kcc-console .researchBanner, .kcc-console .trainingNotice { border-color: #354337; border-radius: 0; background: #151b15; color: #e2eadd; }
+.kcc-console .researchBanner span, .kcc-console .researchStat { color: #a3b2a2; }.kcc-console .trainingNotice.vulnerable { border-color: #8d5c42; background: #2b1e18; color: #ffd7c1; }
+.kcc-console .panel, .kcc-console .judgecard, .kcc-console .roundhero { border-color: #303730; border-radius: 0; background: #111411; color: #edf0ea; }
+.kcc-console .panel h2, .kcc-console .panel h3, .kcc-console .judgecard h3 { color: #f1f3ed; }
+.kcc-console .panelhead p, .kcc-console .panelSection > p { color: #98a297; }.kcc-console .panelSection + .panelSection, .kcc-console .advancedBox { border-color: #2a312a; }
+.kcc-console .sectionLabel span { color: #a7f31b; }.kcc-console .sectionLabel h2 { color: #f4f6ef; }
+.kcc-console .btn { border-radius: 999px; }.kcc-console .btn.blue, .kcc-console .btn.primary { background: #a7f31b; color: #10130e; }.kcc-console .btn.red { background: #ff6c57; color: #190d0b; }.kcc-console .btn.secondary { border-color: #4a5449; background: transparent; color: #edf0eb; }.kcc-console .btn.secondary:hover { border-color: #a7f31b; background: #182016; color: #a7f31b; }
+.kcc-console .baselineSummary, .kcc-console .diffbox, .kcc-console .mutationPreview, .kcc-console .evaluationSuiteCard, .kcc-console .evaluationMetric { border-color: #303930; border-radius: 0; background: #151915; }
+.kcc-console .kv { border-color: #2b342b; }.kcc-console .kv span:first-child { color: #94a193; }.kcc-console .kv span:last-child { color: #e2e7df; }
+.kcc-console .field label { color: #acb5ab; }.kcc-console .field input, .kcc-console .field select, .kcc-console .field textarea { border-color: #3b463b; border-radius: 0; background: #0d100d; color: #edf1eb; }.kcc-console .field input::placeholder, .kcc-console .field textarea::placeholder { color: #667065; }.kcc-console .field input:focus, .kcc-console .field textarea:focus, .kcc-console .field select:focus { border-color: #a7f31b; box-shadow: 0 0 0 3px rgba(167,243,27,.12); }
+.kcc-console .formnote { color: #8f9a8f; }.kcc-console .attackCard { border-color: #303830; border-radius: 0; background: #141814; color: #eef1eb; }.kcc-console .attackCard:hover { border-color: #ff7663; background: #1e1916; }.kcc-console .attackCard.selected { border-color: #ff7663; background: #211914; box-shadow: inset 3px 0 0 #ff7663; }.kcc-console .attackCard .rule, .kcc-console .mutationRow strong { color: #ff7663; }.kcc-console .attackCard small, .kcc-console .mutationDetails { color: #9da69c; }
+.kcc-console .mutationPreviewHeader { color: #a4ada2; }.kcc-console .mutationPreviewHeader strong { color: #a7f31b; }.kcc-console .mutationRow { border-color: #2d362d; }.kcc-console .mutationRow b { color: #ecf0e9; }
+.kcc-console .darkpanel { border-color: #a7f31b; background: #0f130e; }.kcc-console .darkpanel h2, .kcc-console .darkpanel h3 { color: #f4f6ef; }.kcc-console .darkpanel .subtle, .kcc-console .darkpanel .field label { color: #a7b0a6; }.kcc-console .darkpanel .field input { border-color: #465341; background: #101610; }
+.kcc-console .decision { border-color: #425340; border-radius: 0; background: #172117; }.kcc-console .decision.block { border-color: #b95749; background: #2a1714; }.kcc-console .decision .big { color: #a7f31b; }.kcc-console .decision.block .big { color: #ff7663; }.kcc-console .decision p { color: #cad3c7; }.kcc-console .asideDivider { background: #303a2e; }.kcc-console .metric { border-color: #344034; border-radius: 0; background: #151b14; }.kcc-console .metric span { color: #a5afa2; }.kcc-console .metric b { color: #f4f6ef; }
+.kcc-console .tag { border-radius: 999px; background: #20291e; color: #bff368; }.kcc-console .tag.attack, .kcc-console .tag.block { background: #351b17; color: #ff937f; }.kcc-console .tag.allow, .kcc-console .tag.legit { background: #23321e; color: #bef270; }
+.kcc-console .event { border-color: #2a312a; }.kcc-console .event p, .kcc-console .darkpanel .event p { color: #99a398; }
+.kcc-console .stage { border-color: #303930; border-radius: 0; background: #151915; }.kcc-console .stage > span { border-radius: 0; background: #263021; color: #a7f31b; }.kcc-console .stage b { color: #eef1eb; }.kcc-console .stage small { color: #9da79d; }.kcc-console .stage.block, .kcc-console .stage.violation { border-color: #7f4238; background: #251613; }.kcc-console .stage.block > span, .kcc-console .stage.violation > span { background: #54231e; color: #ff8b78; }.kcc-console .stage.allow, .kcc-console .stage.signed, .kcc-console .stage.settled, .kcc-console .stage.compliant { border-color: #4e6d3f; background: #172116; }
+.kcc-console .roundmeta, .kcc-console .outcomeStrip span, .kcc-console .diffbox h4 { color: #a2ada0; }.kcc-console .judgeDecision { border-radius: 0; background: #a7f31b; color: #10130e; }.kcc-console .judgeDecision.block { background: #ff725e; }.kcc-console .judgeDecision .subtle, .kcc-console .judgeDecision.block .subtle, .kcc-console .judgeDecision .pill { color: #283020; }.kcc-console .outcomeStrip > div { border-color: #303930; border-radius: 0; background: #151915; }.kcc-console .outcomeStrip b { color: #eef1eb; }.kcc-console .judgecard { background: #121611; }.kcc-console .judgecard .subtle { color: #a2aca1; }.kcc-console .judge .check { border-radius: 0; background: #263021; color: #c8e6a0; }.kcc-console .judge .check.bad { background: #3b1f1b; color: #ff9a87; }
+.kcc-console .jmetric { border-color: #303930; border-radius: 0; background: #121611; }.kcc-console .jmetric span, .kcc-console .evaluationMetric span, .kcc-console .evaluationSuiteCard small { color: #9ca69b; }.kcc-console .jmetric b, .kcc-console .evaluationMetric b, .kcc-console .evaluationSuiteCard b { color: #eef2eb; }.kcc-console .researchFooter { color: #97a096; }.kcc-console .researchFooter b { color: #a7f31b; }.kcc-console .evaluationActions .btn.selected { border-color: #a7f31b; background: #a7f31b; color: #10130e; }
+@media (max-width: 800px) { .kcc-console .shell, .kcc-console .judgewrap { padding-left: 18px; padding-right: 18px; } }
+
+/* Interaction and detail pass */
+.kcc-console .navin { min-height: 72px; }
+.kcc-console .navlinks a { transition: color .16s ease, background-color .16s ease; }
+.kcc-console .btn { transition: transform .16s ease, background-color .16s ease, border-color .16s ease, color .16s ease; }
+.kcc-console .btn:hover { transform: translateY(-1px); }
+.kcc-console .btn:active { transform: translateY(0); }
+.kcc-console .attackCard { transition: border-color .16s ease, background-color .16s ease, transform .16s ease; }
+.kcc-console .attackCard:hover { transform: translateY(-2px); }
+.kcc-console .roundhero { position: relative; overflow: hidden; }
+.kcc-console .roundhero::before { content: ""; position: absolute; top: 0; right: 0; width: 148px; height: 1px; background: #a7f31b; }
+.kcc-console .judgeDecision { box-shadow: inset 4px 0 0 rgba(0,0,0,.16); }
+.kcc-console .feed { scrollbar-color: #a7f31b #151915; scrollbar-width: thin; }
