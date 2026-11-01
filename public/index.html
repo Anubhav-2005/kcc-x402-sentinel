@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#111713">
-  <meta name="description" content="KCC Sentinel checks x402 payment requests against signed buyer intent. Inspect the Red, Blue, and Judge simulation.">
+  <meta name="theme-color" content="#f4f2ec">
+  <meta name="description" content="KCC Sentinel checks x402 payment terms against signed wallet intent before authorization. Explore the Red, Blue, and independent Judge simulation.">
   <title>KCC Sentinel — x402 payment security</title>
   <link rel="stylesheet" href="/app.css">
 </head>
@@ -12,70 +12,95 @@
   <nav class="nav" aria-label="Main navigation">
     <div class="navin">
       <a class="brand" href="/" aria-label="KCC Sentinel home"><span class="mark" aria-hidden="true"></span><span>KCC</span><em>/</em><span class="brandProduct">Sentinel</span></a>
-      <div class="navlinks"><a href="#boundary">How it works</a><a href="#arena">The arena</a><a href="/judge">Judge view</a></div>
-      <span class="navmeta">x402 / dry-run</span>
+      <div class="navlinks">
+        <a href="#how">How it works</a>
+        <a href="#arena">The arena</a>
+        <a href="/judge">Judge view</a>
+      </div>
+      <span class="navmeta">x402 v2 · dry-run</span>
     </div>
   </nav>
 
   <main>
-    <div class="front">
-      <section class="intro shell" aria-labelledby="intro-title">
-        <div class="introLine"><span class="eyebrow">Team KCC / payment security</span><span class="serial">RESEARCH PROTOTYPE · 001</span></div>
-        <h1 id="intro-title">A payment request is not permission.</h1>
-        <div class="introBottom">
-          <p>Sentinel compares the merchant’s x402 terms with the buyer’s signed intent before the wallet authorization stage. Red changes the terms. Blue sets the limits. The referee checks both.</p>
-          <div class="introActions"><a class="btn primary" href="/red">Open the arena <span aria-hidden="true">↗</span></a><a class="textLink" href="/judge">See the Judge <span aria-hidden="true">→</span></a></div>
+    <section class="hero shell">
+      <div>
+        <span class="eyebrow">Team KCC / Autonomous payment security</span>
+        <h1>A payment request is <span>not permission.</span></h1>
+        <p class="lede">Sentinel checks an x402 merchant demand against the buyer’s signed intent before an AI agent can authorize payment. Red tries to change the terms. Blue sets the limits. The referee shows what happened.</p>
+        <div class="cta">
+          <a class="btn primary" href="/red">Enter the Red / Blue arena <span aria-hidden="true">↗</span></a>
+          <a class="btn secondary" href="/judge">Open the judge view</a>
         </div>
-      </section>
+        <p class="heroFine">No real wallet key or funds are used in this simulation.</p>
+      </div>
 
-      <section class="instrument shell" aria-label="Illustrative secure mode decision">
-        <div class="instrumentFrame">
-          <div class="instrumentBar"><div><span class="instrumentIndex">01 /</span> Decision record</div><div class="instrumentBarRight"><span class="statusLamp" aria-hidden="true"></span>SECURE MODE <span class="barDivider">/</span><span class="barOptional">ILLUSTRATIVE ROUND</span></div></div>
-          <div class="instrumentMain">
-            <div class="compareArea">
-              <div class="compareTitle"><div><span class="microLabel">Merchant demand vs buyer authority</span><h2>One second changes the answer.</h2></div><span class="compareId">HTTP 402 → CHECK → SIGNER</span></div>
-              <div class="comparisonScroll"><table class="comparison">
-                <thead><tr><th scope="col">Payment term</th><th scope="col">Original offer</th><th scope="col">Red submitted</th><th scope="col">Signed permit</th></tr></thead>
-                <tbody>
-                  <tr><th scope="row">Amount</th><td>$0.05 USDC</td><td>$0.05 USDC</td><td>≤ $0.05 USDC</td></tr>
-                  <tr><th scope="row">Recipient</th><td>Approved payee</td><td>Approved payee</td><td>Approved payee</td></tr>
-                  <tr class="changed"><th scope="row">Timeout</th><td>60 seconds</td><td><b>61 seconds</b><span class="delta">+1s</span></td><td>≤ 60 seconds</td></tr>
-                </tbody>
-              </table></div>
-              <div class="compareFoot"><span>Original offer held by referee</span><span>Permit issued from original, not Red’s edited request</span></div>
-            </div>
-            <div class="resultArea"><span class="microLabel">02 / Guard decision</span><div class="resultWord">BLOCK</div><p>The received timeout exceeds the signed ceiling.</p><code>INTENT_TIMEOUT</code><div class="signerState"><span class="signerDot" aria-hidden="true"></span>Simulated signer closed</div></div>
-          </div>
-          <div class="instrumentBase"><div><span>Boundary</span><b>Merchant → Sentinel → wallet</b></div><div><span>Observed rounds</span><b id="homeRounds">—</b></div><div><span>Attack block rate</span><b id="homeBlockRate">—</b></div><div><span>Legitimate pass rate</span><b id="homePassRate">—</b></div><a href="/judge">Live evidence <span aria-hidden="true">↗</span></a></div>
+      <div class="heroDiagram" aria-label="Payment authorization boundary">
+        <div class="diagramTop"><b>Authorization path</b><span>DEMO / 001</span></div>
+        <div class="diagramBody">
+          <div class="diagramRow"><span class="index">01</span><div><strong>Merchant asks</strong><small>HTTP 402 payment requirement</small></div><code>$0.05</code></div>
+          <div class="diagramRow"><span class="index">02</span><div><strong>Owner permits</strong><small>Signed intent fixes amount and recipient</small></div><code>60s</code></div>
+          <div class="diagramRow"><span class="index">03</span><div><strong>Sentinel compares</strong><small>Resource, payee, network, time, replay</small></div><code>9 checks</code></div>
         </div>
-        <p class="instrumentDisclaimer">Example shown in secure mode. Live metrics come from the shared arena. No real key or funds are used.</p>
-      </section>
+        <div class="diagramDecision"><b>Authorize only on a match</b><span>BEFORE SIGNING →</span></div>
+        <div class="diagramFoot">The judge holds the original offer separately from Red’s submitted offer.</div>
+      </div>
+    </section>
+
+    <div class="liveStrip shell" aria-label="Current arena telemetry">
+      <div><small>Observed rounds</small><strong id="homeRounds">—</strong><span>Live shared arena</span></div>
+      <div><small>Attack block rate</small><strong id="homeBlockRate">—</strong><span>Attacks stopped before signer</span></div>
+      <div><small>Legitimate pass rate</small><strong id="homePassRate">—</strong><span>Valid requests still work</span></div>
     </div>
 
-    <section id="boundary" class="boundarySection shell">
-      <div class="sectionRail"><span class="railNumber">02 /</span><span>THE BOUNDARY</span></div>
-      <div class="boundaryContent"><h2>The merchant can ask. Only the buyer can authorize.</h2><p class="boundaryIntro">Sentinel sits at the point where a payment request would become a wallet authorization. It compares the actual demand with a separate, signed permission.</p>
-        <div class="mechanism">
-          <div><span class="mechanismNum">01</span><h3>Read the 402</h3><p>Take the amount, payee, asset, network, resource, and timeout from the merchant’s response.</p></div>
-          <div><span class="mechanismNum">02</span><h3>Bind to intent</h3><p>Check those fields against the buyer’s short-lived permit and wallet policy.</p></div>
-          <div><span class="mechanismNum">03</span><h3>Guard the signer</h3><p>Reserve the permit and budget before a dry-run authorization is created.</p></div>
+    <section id="how" class="section shell">
+      <div class="sectionHead">
+        <div><span class="kicker">The security boundary</span><h2>The request and the permission come from different places.</h2></div>
+        <p class="sectioncopy">A merchant can describe a valid x402 payment. Only the buyer can authorize the amount, destination, resource, and time window. Sentinel enforces that separation at the wallet boundary.</p>
+      </div>
+      <div class="process">
+        <article><span class="num">01 / Observe</span><h3>Read the 402</h3><p>Capture the merchant’s actual offer, including amount, payee, asset, network, and resource.</p></article>
+        <article><span class="num">02 / Bind</span><h3>Check signed intent</h3><p>Compare every offered term with the owner’s short-lived permit and wallet policy.</p></article>
+        <article><span class="num">03 / Decide</span><h3>Guard the signer</h3><p>Reserve one-use permission and budget before a dry-run authorization is created.</p></article>
+      </div>
+    </section>
+
+    <section class="section proofSection">
+      <div class="shell">
+        <div class="sectionHead">
+          <div><span class="kicker">What the referee measures</span><h2>Show the safe purchase. Then change one term.</h2></div>
+          <p class="sectioncopy">The referee compares Red’s submission with a server-held original. A blocked attack and a valid payment are both needed to judge the guard.</p>
+        </div>
+        <div class="caseGrid">
+          <article class="case">
+            <div class="caseTop"><small>Control / original offer</small><span class="caseStatus">ALLOW</span></div>
+            <h3>$0.05 to the approved payee</h3>
+            <p>The received requirement matches the signed intent. The dry-run wallet stage opens, and the merchant returns the resource.</p>
+            <code>Expected ALLOW · Sentinel ALLOW · Referee CORRECT</code>
+          </article>
+          <article class="case attack">
+            <div class="caseTop"><small>Attack / altered offer</small><span class="caseStatus">BLOCK</span></div>
+            <h3>60 seconds becomes 61</h3>
+            <p>The wallet policy may allow 120 seconds, but the original signed permit binds this purchase to 60. One extra second is still an attack.</p>
+            <code>Expected BLOCK · Sentinel BLOCK · INTENT_TIMEOUT</code>
+          </article>
         </div>
       </div>
     </section>
 
-    <section id="arena" class="arenaSection">
-      <div class="shell arenaInner"><div class="sectionRail"><span class="railNumber">03 /</span><span>THE ARENA</span></div><div class="arenaContent"><div class="arenaHeading"><h2>Three views of the same payment.</h2><p>Attack the request, set the policy, and inspect the referee’s evidence.</p></div>
-        <div class="roleList">
-          <a href="/red"><span class="roleNumber">01</span><span class="roleName">Red</span><span class="roleDescription">Change one merchant payment term and submit it.</span><span class="roleArrow" aria-hidden="true">↗</span></a>
-          <a href="/blue"><span class="roleNumber">02</span><span class="roleName">Blue</span><span class="roleDescription">Set wallet authority and run a valid purchase.</span><span class="roleArrow" aria-hidden="true">↗</span></a>
-          <a href="/judge"><span class="roleNumber">03</span><span class="roleName">Judge</span><span class="roleDescription">Compare the original, mutation, permit, and outcome.</span><span class="roleArrow" aria-hidden="true">↗</span></a>
-        </div>
-        <p class="arenaNote">Blue can enable a clearly labeled vulnerable training fixture to demonstrate a real Red win. Secure mode is the default.</p>
-      </div></div>
+    <section id="arena" class="section shell">
+      <div class="sectionHead">
+        <div><span class="kicker">Live demonstration</span><h2>Three views. One transaction story.</h2></div>
+        <p class="sectioncopy">Run a mutation in Red, set authority in Blue, and project the independent result. The intentionally vulnerable training fixture is labeled on every view.</p>
+      </div>
+      <div class="rolegrid">
+        <a class="role redrole" href="/red"><small>01 / Attack</small><h3>Red console ↗</h3><p>Start from the merchant’s original challenge and change one payment term.</p></a>
+        <a class="role bluerole" href="/blue"><small>02 / Defend</small><h3>Blue console ↗</h3><p>Control wallet policy and run a legitimate 402 → 200 purchase.</p></a>
+        <a class="role judgerole" href="/judge"><small>03 / Verify</small><h3>Judge view ↗</h3><p>See the original offer, mutation, permit, wallet stage, and referee verdict.</p></a>
+      </div>
     </section>
   </main>
 
-  <footer class="footer shell"><span>Team KCC · x402 Sentinel · dry-run research prototype</span><a href="https://github.com/Anubhav-2005/kcc-x402-sentinel">Source on GitHub ↗</a></footer>
+  <footer class="footer shell"><span>© Team KCC · x402 Sentinel · research prototype</span><span><a href="https://github.com/Anubhav-2005/kcc-x402-sentinel">Source on GitHub ↗</a> · No transaction is broadcast</span></footer>
   <script type="module" src="/landing.js"></script>
 </body>
 </html>
