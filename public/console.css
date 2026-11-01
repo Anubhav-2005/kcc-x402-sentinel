@@ -2,18 +2,18 @@
 .shell, .judgewrap {
   width: min(1280px, 100%);
   margin: 0 auto;
-  padding: 46px 32px 88px;
+  padding: 36px 32px 80px;
 }
 .topbar {
   display: flex;
   justify-content: space-between;
   align-items: end;
   gap: 30px;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 .topbar h1, .judgeTop h1 {
   margin: 10px 0 9px;
-  font-size: clamp(34px, 3.5vw, 48px);
+  font-size: clamp(29px, 2.7vw, 38px);
   font-weight: 650;
   letter-spacing: -.055em;
   line-height: 1.08;
@@ -193,7 +193,7 @@
 .decision { padding: 20px; border: 1px solid #3e614a; border-radius: 9px; background: #1c402c; }
 .decision.block { border-color: #98544a; background: #4c2926; }
 .decision.allow { border-color: #3d684b; background: #1c402c; }
-.decision .big { font-size: clamp(26px, 2.8vw, 36px); font-weight: 720; letter-spacing: -.05em; line-height: 1.06; overflow-wrap: anywhere; }
+.decision .big { font-size: clamp(24px, 2.3vw, 30px); font-weight: 720; letter-spacing: -.05em; line-height: 1.06; overflow-wrap: anywhere; }
 .decision p { margin: 10px 0 0; color: #d9e6d8; font-size: 12px; line-height: 1.5; }
 .decision .subtle { color: #c2d4c3; }
 .decision.block p, .decision.block .subtle { color: #f3d7d3; }
@@ -252,7 +252,7 @@
 .roundhero { padding: 26px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
 .roundmeta { display: flex; justify-content: space-between; gap: 14px; color: #6a786e; font-family: var(--mono); font-size: 11px; text-transform: uppercase; }
 .roundHeader { display: grid; grid-template-columns: minmax(0, 1fr) minmax(275px, .52fr); gap: 25px; align-items: stretch; margin: 20px 0; }
-.roundHeader h2 { max-width: 650px; margin: 8px 0 0; font-size: clamp(25px, 2.7vw, 36px); font-weight: 650; letter-spacing: -.046em; line-height: 1.13; }
+.roundHeader h2 { max-width: 650px; margin: 8px 0 0; font-size: clamp(23px, 2.3vw, 30px); font-weight: 650; letter-spacing: -.046em; line-height: 1.18; }
 .judgeDecision {
   display: flex;
   flex-direction: column;
@@ -264,7 +264,7 @@
   color: #fff;
 }
 .judgeDecision.block { background: #542d28; }
-.judgeDecision .word { font-size: clamp(23px, 2.4vw, 34px); font-weight: 700; letter-spacing: -.05em; line-height: 1.05; overflow-wrap: anywhere; }
+.judgeDecision .word { font-size: clamp(22px, 2.1vw, 29px); font-weight: 700; letter-spacing: -.05em; line-height: 1.08; overflow-wrap: anywhere; }
 .judgeDecision .subtle { margin-top: 6px; color: #d1e0d0; font-size: 11px; }
 .judgeDecision.block .subtle { color: #f0d7d3; }
 .judgeDecision .pill { align-self: start; color: #dae9d9; font-family: var(--mono); font-size: 10px; }
